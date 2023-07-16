@@ -232,3 +232,16 @@ img {
 
 @media screen and (max-width: 414px) {
     .ToDo {
+        max-width: 90%;
+    }
+
+    .app {
+        height: 100%;
+    }
+
+
+
+    .btnItem {
+        padding: 5px;
+    }
+}

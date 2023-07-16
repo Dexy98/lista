@@ -84,4 +84,16 @@ function ToDoList() {
 
               <button
                 className="btnItem mr-1"
-                onClick={
+                onClick={() => deleteItemOnList(el.id)}
+              >
+                ❌
+              </button>
+            </div>
+          </ul>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default ToDoList;
