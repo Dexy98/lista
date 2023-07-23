@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import PageTitle from "./components/PageTitle";
 
 function ToDoList() {
   const [textItem, setTextItem] = useState("");
   const [itemList, addItemList] = useState([]);
+
+  useEffect(() => {
+    const storedList = localStorage.getItem("itemList");
+    if (storedList) {
+      addItemList(JSON.parse(storedList));
+    }
+  }, []);
 
   const onChangeItem = (e) => {
     setTextItem(e.target.value);
@@ -15,8 +22,8 @@ function ToDoList() {
       return;
     }
 
-    addItemList([
-      ...itemList,
+    addItemList((prevItemList) => [
+      ...prevItemList,
       {
         item: textItem,
         key: Date.now(),
@@ -25,20 +32,23 @@ function ToDoList() {
       },
     ]);
 
-    localStorage.setItem("itemList", JSON.stringify(itemList));
-    setTextItem("");
+    localStorage.setItem("itemList", JSON.stringify([...itemList, { item: textItem, key: Date.now(), id: Math.random() * 1000, completed: false }]));
+    setTextItem(""); 
+
   };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       addItemToList();
+      localStorage.setItem("itemList", JSON.stringify([...itemList, { item: textItem, key: Date.now(), id: Math.random() * 1000, completed: false }]));
     }
-  };
 
+  };
 
   const deleteItemOnList = (id) => {
     let newList = itemList.filter((el) => el.id !== id);
     addItemList(newList);
+    localStorage.setItem("itemList", JSON.stringify(newList));
   };
 
   const CompleteItem = (id) => {
@@ -47,6 +57,7 @@ function ToDoList() {
         if (item.id === id) {
           return { ...item, completed: !item.completed };
         }
+        localStorage.setItem("itemList", JSON.stringify(itemList));
         return item;
       })
     );
